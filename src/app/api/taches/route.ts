@@ -53,6 +53,20 @@ export async function GET(request: NextRequest) {
             nom: true,
           },
         },
+        lead: {
+          select: {
+            id: true,
+            prenomParent: true,
+            nomParent: true,
+          },
+        },
+        famille: {
+          select: {
+            id: true,
+            prenom: true,
+            nom: true,
+          },
+        },
       },
       orderBy: {
         dateEcheance: "asc",
@@ -85,27 +99,17 @@ export async function POST(request: NextRequest) {
       creeParId,
     } = body;
 
-    if (
-      !titre ||
-      !dateEcheance ||
-      !assigneeId ||
-      !creeParId
-    ) {
+    if (!titre || !dateEcheance || !assigneeId) {
       return NextResponse.json(
         {
-          error:
-            "Missing required fields: titre, dateEcheance, assigneeId, creeParId",
+          error: "Missing required fields: titre, dateEcheance, assigneeId",
         },
         { status: 400 }
       );
     }
 
-    if (!leadId && !familleId) {
-      return NextResponse.json(
-        { error: "Either leadId or familleId must be provided" },
-        { status: 400 }
-      );
-    }
+    // Resolve creeParId: use provided value or fall back to assigneeId
+    const resolvedCreeParId = creeParId || assigneeId;
 
     const tache = await prisma.tache.create({
       data: {
@@ -115,9 +119,9 @@ export async function POST(request: NextRequest) {
         dateEcheance: new Date(dateEcheance),
         priorite: priorite || "normale",
         assigneeId,
-        leadId,
-        familleId,
-        creeParId,
+        leadId: leadId || null,
+        familleId: familleId || null,
+        creeParId: resolvedCreeParId,
         statut: "a_faire",
       },
       include: {

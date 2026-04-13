@@ -156,42 +156,44 @@ export function Sidebar() {
       <div className={cn("flex flex-col", sidebarClasses)} style={{ backgroundColor: "#0F1E3D" }}>
       {/* Logo + Brand Section */}
       <div className="border-b border-opacity-10 border-white px-5 py-5">
-        <div className="flex items-center gap-3 mb-2">
-          {/* Logo — remplacer /logo.png par ton vrai logo */}
-          <img
-            src="/logo.png"
-            alt="SOS"
-            className="h-11 w-11 rounded-full object-cover"
-            style={{ border: "2px solid #C9A84C" }}
-            onError={(e) => {
-              // Fallback si le logo n'est pas encore ajouté
-              const target = e.target as HTMLImageElement;
-              target.style.display = "none";
-              const fallback = target.nextElementSibling as HTMLElement;
-              if (fallback) fallback.style.display = "flex";
-            }}
-          />
-          <div
-            className="h-11 w-11 items-center justify-center rounded-full font-bold text-xs"
-            style={{
-              display: "none",
-              backgroundColor: "#0F1E3D",
-              border: "2px solid #C9A84C",
-              color: "#C9A84C",
-            }}
-          >
-            SOS
-          </div>
-          <div>
-            <div className="text-sm font-bold text-white leading-tight">
-              Soutien-Omni-Scolaire
+        <div className="flex items-center gap-3">
+          <div className="relative flex-shrink-0">
+            <img
+              src="/logo.png"
+              alt="SOS"
+              className="h-10 w-10 rounded-full object-cover"
+              style={{
+                border: "2px solid #C9A84C",
+                imageRendering: "auto",
+              }}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+                const fallback = document.getElementById("logo-fallback");
+                if (fallback) fallback.style.display = "flex";
+              }}
+            />
+            <div
+              id="logo-fallback"
+              className="h-10 w-10 items-center justify-center rounded-full font-bold text-xs"
+              style={{
+                display: "none",
+                backgroundColor: "#152952",
+                border: "2px solid #C9A84C",
+                color: "#C9A84C",
+              }}
+            >
+              SOS
             </div>
           </div>
-        </div>
-        <div className="mt-2 pl-1">
-          <p className="text-xs" style={{ color: "#7B9BC4" }}>
-            CRM — Machine Commerciale
-          </p>
+          <div className="min-w-0">
+            <div className="text-sm font-bold text-white leading-tight truncate">
+              Soutien Omni Scolaire
+            </div>
+            <p className="text-xs mt-0.5" style={{ color: "#7B9BC4" }}>
+              CRM — Machine Commerciale
+            </p>
+          </div>
         </div>
       </div>
 

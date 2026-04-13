@@ -211,7 +211,10 @@ export default function FamilleDetailPage() {
       <div className="card overflow-hidden">
         <div className="section-header">
           <h3 className="section-title">Élèves ({famille.eleves?.length || 0})</h3>
-          <button className="btn btn-gold btn-sm">+ Ajouter élève</button>
+          <button
+            className="btn btn-gold btn-sm"
+            onClick={() => alert("Fonctionnalite en cours de developpement. Contactez l'administrateur.")}
+          >+ Ajouter eleve</button>
         </div>
 
         {famille.eleves && famille.eleves.length > 0 ? (
@@ -231,7 +234,10 @@ export default function FamilleDetailPage() {
                       {eleve.niveauScolaire || "—"} • {eleve.ecole || "—"}
                     </p>
                   </div>
-                  <button className="btn btn-secondary btn-sm">
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => alert("Fonctionnalite en cours de developpement. Contactez l'administrateur.")}
+                  >
                     + Inscription
                   </button>
                 </div>

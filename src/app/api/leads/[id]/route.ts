@@ -124,10 +124,12 @@ export async function PUT(
     if (matiereDemandee !== undefined) dataToUpdate.matiereDemandee = matiereDemandee;
     if (offreDemandee !== undefined) dataToUpdate.offreDemandee = offreDemandee;
     if (nombreEnfants !== undefined) dataToUpdate.nombreEnfants = nombreEnfants;
-    if (scoreUrgence !== undefined) dataToUpdate.scoreUrgence = scoreUrgence;
-    if (scoreBudget !== undefined) dataToUpdate.scoreBudget = scoreBudget;
-    if (scoreReactivite !== undefined) dataToUpdate.scoreReactivite = scoreReactivite;
-    if (scorePotentiel !== undefined) dataToUpdate.scorePotentiel = scorePotentiel;
+    // Score validation (0-5 bounds)
+    const clampScore = (v: number) => Math.max(0, Math.min(5, Math.round(v)));
+    if (scoreUrgence !== undefined) dataToUpdate.scoreUrgence = clampScore(scoreUrgence);
+    if (scoreBudget !== undefined) dataToUpdate.scoreBudget = clampScore(scoreBudget);
+    if (scoreReactivite !== undefined) dataToUpdate.scoreReactivite = clampScore(scoreReactivite);
+    if (scorePotentiel !== undefined) dataToUpdate.scorePotentiel = clampScore(scorePotentiel);
     if (campagneId !== undefined) dataToUpdate.campagneId = campagneId;
     if (recommandeParId !== undefined) dataToUpdate.recommandeParId = recommandeParId;
     if (raisonPerte !== undefined) dataToUpdate.raisonPerte = raisonPerte;

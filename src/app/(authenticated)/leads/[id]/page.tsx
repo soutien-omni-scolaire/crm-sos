@@ -317,7 +317,7 @@ export default function LeadDetailPage() {
               <h3 className="font-semibold text-red-900 mb-2">
                 Raison de la perte
               </h3>
-              <p className="text-red-800">{lead.raisonPerte}</p>
+              <p className="text-red-800">{RAISON_PERTE_LABELS[lead.raisonPerte] || lead.raisonPerte}</p>
             </div>
           )}
 
