@@ -13,7 +13,7 @@
 @layer components {
   /* === Buttons === */
   .btn {
-    @apply inline-flex items-center justify-center rounded-[10px] px-4 py-2.5 text-sm sm:text-base font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none gap-1.5 min-h-[44px] sm:min-h-auto;
+    @apply inline-flex items-center justify-center rounded-[10px] px-4 py-2.5 text-sm sm:text-base font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none gap-1.5 min-h-[44px] sm:min-h-0;
     letter-spacing: 0.01em;
   }
   .btn-primary {
@@ -39,7 +39,7 @@
 
   /* === Inputs === */
   .input {
-    @apply block w-full rounded-[10px] border-[1.5px] border-gray-200 bg-white px-3.5 py-2.5 text-sm sm:text-base placeholder:text-gray-400 focus:outline-none focus:ring-1 min-h-[44px] sm:min-h-auto;
+    @apply block w-full rounded-[10px] border-[1.5px] border-gray-200 bg-white px-3.5 py-2.5 text-sm sm:text-base placeholder:text-gray-400 focus:outline-none focus:ring-1 min-h-[44px] sm:min-h-0;
     font-family: inherit;
     color: #374151;
   }
@@ -172,7 +172,7 @@
 
   /* === Centre Filter Buttons === */
   .centre-btn {
-    @apply px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold border-[1.5px] border-gray-200 bg-white cursor-pointer transition-all min-h-[40px] sm:min-h-auto flex items-center justify-center;
+    @apply px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold border-[1.5px] border-gray-200 bg-white cursor-pointer transition-all min-h-[40px] sm:min-h-0 flex items-center justify-center;
     color: #6B7280;
     letter-spacing: 0.03em;
   }
