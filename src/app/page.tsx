@@ -68,14 +68,14 @@ export default function Dashboard() {
     </div>
   );
 
-  const overdueTasks = stats.tachesAujourdhui.filter((t) =>
+  const overdueTasks = (stats.tachesAujourdhui || []).filter((t) =>
     isOverdue(t.dateEcheance)
   ).length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <StatCard
           title="Leads en cours"
           value={stats.leadsEnCours}
@@ -109,7 +109,7 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Mes tâches du jour */}
         <div className="lg:col-span-1 card overflow-hidden">
           <div className="section-header">
@@ -136,8 +136,8 @@ export default function Dashboard() {
           </div>
 
           <div className="divide-y divide-gray-100">
-            {stats.tachesAujourdhui && stats.tachesAujourdhui.length > 0 ? (
-              stats.tachesAujourdhui.slice(0, 5).map((tache: Tache) => (
+            {(stats.tachesAujourdhui || []).length > 0 ? (
+              (stats.tachesAujourdhui || []).slice(0, 5).map((tache: Tache) => (
                 <div
                   key={tache.id}
                   className="task-item"
@@ -166,31 +166,31 @@ export default function Dashboard() {
           <div className="section-header">
             <h2 className="section-title">Entonnoir de conversion</h2>
           </div>
-          <div className="p-6 space-y-4">
-            {stats.entonnoir && (
+          <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+            {stats.entonnoir ? (
               <>
                 {[
-                  { label: "Nouveau", value: stats.entonnoir.nouveau, color: "#2656A0" },
-                  { label: "Contacté", value: stats.entonnoir.contacte, color: "#F97316" },
-                  { label: "Qualifié", value: stats.entonnoir.qualifie, color: "#A855F7" },
-                  { label: "En attente", value: stats.entonnoir.en_attente, color: "#6B7280" },
-                  { label: "Converti", value: stats.entonnoir.converti, color: "#10B981" },
-                  { label: "Perdu", value: stats.entonnoir.perdu, color: "#EF4444" },
+                  { label: "Nouveau", value: stats.entonnoir?.nouveau || 0, color: "#2656A0" },
+                  { label: "Contacté", value: stats.entonnoir?.contacte || 0, color: "#F97316" },
+                  { label: "Qualifié", value: stats.entonnoir?.qualifie || 0, color: "#A855F7" },
+                  { label: "En attente", value: stats.entonnoir?.en_attente || 0, color: "#6B7280" },
+                  { label: "Converti", value: stats.entonnoir?.converti || 0, color: "#10B981" },
+                  { label: "Perdu", value: stats.entonnoir?.perdu || 0, color: "#EF4444" },
                 ].map((step, idx) => {
                   const total =
-                    stats.entonnoir.nouveau +
-                    stats.entonnoir.contacte +
-                    stats.entonnoir.qualifie +
-                    stats.entonnoir.en_attente +
-                    stats.entonnoir.converti +
-                    stats.entonnoir.perdu;
+                    (stats.entonnoir?.nouveau || 0) +
+                    (stats.entonnoir?.contacte || 0) +
+                    (stats.entonnoir?.qualifie || 0) +
+                    (stats.entonnoir?.en_attente || 0) +
+                    (stats.entonnoir?.converti || 0) +
+                    (stats.entonnoir?.perdu || 0);
                   const percentage = total > 0 ? (step.value / total) * 100 : 0;
                   const prevTotal = [
-                    stats.entonnoir.nouveau,
-                    stats.entonnoir.contacte,
-                    stats.entonnoir.qualifie,
-                    stats.entonnoir.en_attente,
-                    stats.entonnoir.converti,
+                    stats.entonnoir?.nouveau || 0,
+                    stats.entonnoir?.contacte || 0,
+                    stats.entonnoir?.qualifie || 0,
+                    stats.entonnoir?.en_attente || 0,
+                    stats.entonnoir?.converti || 0,
                   ]
                     .slice(0, idx)
                     .reduce((a, b) => a + b, 0);
@@ -235,6 +235,10 @@ export default function Dashboard() {
                   );
                 })}
               </>
+            ) : (
+              <div className="text-center text-gray-500 py-4">
+                Aucune donnée de conversion pour le moment
+              </div>
             )}
           </div>
         </div>
@@ -249,7 +253,7 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        {stats.derniersLeads && stats.derniersLeads.length > 0 ? (
+        {(stats.derniersLeads || []).length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50">
@@ -265,7 +269,7 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {stats.derniersLeads.slice(0, 5).map((lead: Lead) => {
+                {(stats.derniersLeads || []).slice(0, 5).map((lead: Lead) => {
                   const score = getLeadScore(lead);
                   const filledDots = Math.ceil(score / 1);
 

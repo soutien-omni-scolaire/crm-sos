@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 const navigation = [
   {
@@ -101,9 +102,51 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  const sidebarClasses = isMobile
+    ? `fixed left-0 top-0 z-50 h-screen w-64 transform transition-transform duration-300 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`
+    : "hidden lg:flex w-64 flex-col";
 
   return (
-    <div className="flex w-64 flex-col" style={{ backgroundColor: "#0F1E3D" }}>
+    <>
+      {/* Mobile hamburger button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-4 left-4 z-40 p-2 rounded-lg bg-white border border-gray-200 hover:bg-gray-50"
+        aria-label="Toggle menu"
+      >
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
+      {/* Mobile overlay */}
+      {isMobile && isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-50"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={cn("flex flex-col", sidebarClasses)} style={{ backgroundColor: "#0F1E3D" }}>
       {/* Logo + Brand Section */}
       <div className="border-b border-opacity-10 border-white px-5 py-5">
         <div className="flex items-center gap-3 mb-2">
@@ -247,6 +290,7 @@ export function Sidebar() {
           </p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

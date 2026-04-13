@@ -83,20 +83,20 @@ export default function AmbassadeurPage() {
       : 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
           Programme Ambassadeurs
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-sm sm:text-base text-gray-600 mt-2">
           Récompensez vos meilleurs ambassadeurs et recommandateurs
         </p>
       </div>
 
       {/* Global Stats Card */}
       <div
-        className="gold-card"
+        className="gold-card p-4 sm:p-6"
         style={{
           background: "linear-gradient(135deg, #C9A84C 0%, #E0CA8D 50%, #C9A84C 100%)",
         }}

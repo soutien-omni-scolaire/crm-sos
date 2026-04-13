@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo.png",
   },
+  viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0",
 };
 
 export default function RootLayout({
@@ -23,11 +24,11 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <div className="flex h-screen overflow-hidden bg-gray-50">
+        <div className="flex h-screen overflow-hidden bg-gray-50 flex-col lg:flex-row">
           <Sidebar />
-          <div className="flex flex-1 flex-col overflow-hidden">
+          <div className="flex flex-1 flex-col overflow-hidden w-full">
             <Header />
-            <main className="flex-1 overflow-y-auto p-7">{children}</main>
+            <main className="flex-1 overflow-y-auto p-4 sm:p-7">{children}</main>
           </div>
         </div>
       </body>

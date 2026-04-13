@@ -83,21 +83,21 @@ export default function AnalytiquePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Analytique</h1>
-        <p className="text-gray-600 mt-1">Vue d'ensemble des performances</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Analytique</h1>
+        <p className="text-sm sm:text-base text-gray-600 mt-1">Vue d'ensemble des performances</p>
       </div>
 
       {/* Conversion par Source */}
-      <div className="card p-6">
+      <div className="card p-4 sm:p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="gold-divider" />
-          <h3 className="section-title">Conversion par source</h3>
+          <h3 className="section-title text-xs sm:text-sm">Conversion par source</h3>
         </div>
 
-        <div className="space-y-4 mt-4">
+        <div className="space-y-3 sm:space-y-4 mt-4">
           {analytics.conversionParSource && analytics.conversionParSource.length > 0 ? (
             analytics.conversionParSource.map((item) => {
               const conversionRate =

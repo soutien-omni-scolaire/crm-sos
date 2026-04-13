@@ -123,22 +123,23 @@ export default function PipelinePage() {
   }
 
   return (
-    <div className="h-full overflow-x-auto">
-      <div className="space-y-6">
+    <div className="flex flex-col h-full">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Pipeline</h1>
-          <p className="text-gray-600 mt-2">Gestion des prospects par statut</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Pipeline</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-2">Gestion des prospects par statut</p>
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-700">{error}</p>
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
+            <p className="text-sm sm:text-base text-red-700">{error}</p>
           </div>
         )}
 
         {/* Kanban Board */}
-        <div className="flex gap-6 pb-4 min-h-[600px]">
+        <div className="overflow-x-auto flex-1">
+          <div className="flex gap-4 sm:gap-6 pb-4 min-h-[600px]">
           {PIPELINE_ORDER.map((status) => {
             const statusLeads = leadsByStatus[status] || [];
             const statusLabel = STATUT_LEAD_LABELS[status] || status;
@@ -165,28 +166,28 @@ export default function PipelinePage() {
             return (
               <div
                 key={status}
-                className="flex-shrink-0 w-80 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden flex flex-col"
+                className="flex-shrink-0 w-72 sm:w-80 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden flex flex-col"
               >
                 {/* Column Header */}
                 <div
                   className={cn(
-                    "px-4 py-4 border-b border-gray-200 border-t-4",
+                    "px-3 sm:px-4 py-3 sm:py-4 border-b border-gray-200 border-t-4",
                     headerColorMap[status],
                     borderColorMap[status]
                   )}
                 >
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-900">
+                  <div className="flex items-center justify-between gap-2">
+                    <h3 className="font-semibold text-gray-900 text-sm truncate">
                       {statusLabel}
                     </h3>
-                    <span className="bg-gray-300 text-gray-700 text-xs font-medium rounded-full px-2.5 py-0.5">
+                    <span className="bg-gray-300 text-gray-700 text-xs font-medium rounded-full px-2 py-0.5 flex-shrink-0">
                       {statusLeads.length}
                     </span>
                   </div>
                 </div>
 
                 {/* Cards Container */}
-                <div className="flex-1 p-3 overflow-y-auto space-y-3 bg-gray-50">
+                <div className="flex-1 p-2 sm:p-3 overflow-y-auto space-y-2 sm:space-y-3 bg-gray-50">
                   {statusLeads.length > 0 ? (
                     statusLeads.map((lead) => (
                       <LeadCard
@@ -204,6 +205,7 @@ export default function PipelinePage() {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
     </div>

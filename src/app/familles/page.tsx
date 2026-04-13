@@ -172,25 +172,25 @@ export default function FamillesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Familles</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Familles</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
             {filteredFamilles.length} famille{filteredFamilles.length !== 1 ? "s" : ""}
           </p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="btn btn-gold"
+          className="btn btn-gold w-full sm:w-auto"
         >
           + Nouvelle famille
         </button>
       </div>
 
       {/* Filters */}
-      <div className="card p-4 flex gap-4 items-end">
+      <div className="card p-4 flex flex-col sm:flex-row gap-4 sm:items-end">
         <div className="flex-1">
           <label className="label">Rechercher</label>
           <input
@@ -201,7 +201,7 @@ export default function FamillesPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="w-40">
+        <div className="w-full sm:w-40">
           <label className="label">Statut</label>
           <select
             className="select"

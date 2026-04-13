@@ -13,7 +13,7 @@
 @layer components {
   /* === Buttons === */
   .btn {
-    @apply inline-flex items-center justify-center rounded-[10px] px-4 py-2.5 text-sm font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none gap-1.5;
+    @apply inline-flex items-center justify-center rounded-[10px] px-4 py-2.5 text-sm sm:text-base font-semibold transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none gap-1.5 min-h-[44px] sm:min-h-auto;
     letter-spacing: 0.01em;
   }
   .btn-primary {
@@ -39,7 +39,7 @@
 
   /* === Inputs === */
   .input {
-    @apply block w-full rounded-[10px] border-[1.5px] border-gray-200 bg-white px-3.5 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1;
+    @apply block w-full rounded-[10px] border-[1.5px] border-gray-200 bg-white px-3.5 py-2.5 text-sm sm:text-base placeholder:text-gray-400 focus:outline-none focus:ring-1 min-h-[44px] sm:min-h-auto;
     font-family: inherit;
     color: #374151;
   }
@@ -99,7 +99,7 @@
   .stat-card-orange::before { background: #F97316; }
   .stat-card-purple::before { background: #A855F7; }
   .stat-value {
-    @apply text-3xl font-extrabold;
+    @apply text-2xl sm:text-3xl font-extrabold;
     color: #152952;
   }
   .stat-value-alert { color: #DC2626; }
@@ -114,10 +114,10 @@
 
   /* === Section Headers === */
   .section-header {
-    @apply flex items-center justify-between px-5 py-4 border-b border-gray-100;
+    @apply flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-5 py-4 border-b border-gray-100 gap-3 sm:gap-0;
   }
   .section-title {
-    @apply text-sm font-bold flex items-center gap-2;
+    @apply text-xs sm:text-sm font-bold flex items-center gap-2;
     color: #152952;
   }
   .section-link {
@@ -144,7 +144,7 @@
 
   /* === Task Item === */
   .task-item {
-    @apply flex items-center gap-3.5 px-5 py-3.5 border-b border-gray-100 transition-colors;
+    @apply flex items-center gap-3 sm:gap-3.5 px-4 sm:px-5 py-3 sm:py-3.5 border-b border-gray-100 transition-colors;
   }
   .task-item:hover { background: #F9FAFB; }
   .task-item:last-child { border-bottom: none; }
@@ -155,15 +155,15 @@
 
   /* === Tables === */
   .table-header {
-    @apply text-left text-xs font-semibold uppercase tracking-wider border-b-2 border-gray-100;
+    @apply text-left text-xs sm:text-sm font-semibold uppercase tracking-wider border-b-2 border-gray-100;
     color: #3468B8;
-    padding: 12px 16px;
+    padding: 12px 8px;
     background: #F9FAFB;
   }
   .table-cell {
-    @apply text-sm border-b border-gray-100;
+    @apply text-xs sm:text-sm border-b border-gray-100;
     color: #374151;
-    padding: 14px 16px;
+    padding: 12px 8px;
   }
   .table-row-clickable {
     @apply cursor-pointer transition-colors;
@@ -172,7 +172,7 @@
 
   /* === Centre Filter Buttons === */
   .centre-btn {
-    @apply px-3.5 py-1.5 rounded-lg text-xs font-semibold border-[1.5px] border-gray-200 bg-white cursor-pointer transition-all;
+    @apply px-3.5 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold border-[1.5px] border-gray-200 bg-white cursor-pointer transition-all min-h-[40px] sm:min-h-auto flex items-center justify-center;
     color: #6B7280;
     letter-spacing: 0.03em;
   }
@@ -187,8 +187,16 @@
 
   /* === Kanban === */
   .kanban-card {
-    @apply bg-white border border-gray-200 rounded-[10px] p-3.5 cursor-pointer transition-all;
+    @apply bg-white border border-gray-200 rounded-[10px] p-2.5 sm:p-3.5 cursor-pointer transition-all;
     border-left: 3px solid transparent;
+  }
+
+  /* === Responsive Kanban Columns === */
+  .kanban-columns {
+    @apply flex gap-4 sm:gap-6 pb-4 overflow-x-auto;
+  }
+  .kanban-column {
+    @apply flex-shrink-0 w-72 sm:w-80 bg-gray-50 rounded-xl border border-gray-200 overflow-hidden flex flex-col;
   }
   .kanban-card:hover {
     box-shadow: 0 4px 12px rgba(15,30,61,0.08);
@@ -204,13 +212,13 @@
 
   /* === Modal === */
   .modal-overlay {
-    @apply fixed inset-0 z-50 hidden items-center justify-center;
+    @apply fixed inset-0 z-50 hidden items-center justify-center p-4;
     background: rgba(15,30,61,0.5);
     backdrop-filter: blur(4px);
   }
   .modal-overlay.visible { display: flex; }
   .modal {
-    @apply bg-white w-11/12 max-h-[85vh] overflow-y-auto;
+    @apply bg-white w-full sm:w-11/12 max-h-[90vh] sm:max-h-[85vh] overflow-y-auto;
     border-radius: 18px;
     max-width: 560px;
     box-shadow: 0 24px 80px rgba(15,30,61,0.2);
@@ -237,6 +245,52 @@
 
   /* === Funnel === */
   .funnel-step {
-    @apply relative flex items-center justify-between px-5 py-3;
+    @apply relative flex items-center justify-between px-4 sm:px-5 py-3;
+  }
+
+  /* === Responsive Tables === */
+  @media (max-width: 640px) {
+    table {
+      font-size: 0.75rem;
+    }
+    .table-header,
+    .table-cell {
+      padding: 8px 4px;
+    }
+  }
+
+  /* === Responsive Cards === */
+  .stat-card {
+    @apply p-4 sm:p-6;
+  }
+
+  .card {
+    @apply rounded-lg sm:rounded-[14px];
+  }
+
+  /* === Mobile-Friendly Badges === */
+  .badge {
+    @apply text-xs sm:text-sm whitespace-nowrap;
+  }
+
+  /* === Touch-Friendly Elements === */
+  button, a {
+    @apply transition-all;
+  }
+
+  /* === Scrollbar Styling === */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F3F4F6;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #D1D5DB;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #9CA3AF;
   }
 }

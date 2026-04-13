@@ -123,18 +123,18 @@ export default function CampagnesPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Campagnes</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Campagnes</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
             {campagnes.length} campagne(s)
           </p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="btn btn-gold"
+          className="btn btn-gold w-full sm:w-auto"
         >
           + Créer une campagne
         </button>
@@ -142,11 +142,11 @@ export default function CampagnesPage() {
 
       {/* Cards Grid */}
       {loading ? (
-        <div className="p-8 text-center text-gray-600">
+        <div className="p-6 sm:p-8 text-center text-sm sm:text-base text-gray-600">
           Chargement des campagnes...
         </div>
       ) : campagnes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {campagnes.map((campagne) => {
             const leadsGenerated = campagne.leads?.length || 0;
             const leadsConverted = campagne.leads?.filter(
@@ -165,7 +165,7 @@ export default function CampagnesPage() {
               <div
                 key={campagne.id}
                 className={cn(
-                  "card p-6 border-l-4",
+                  "card p-4 sm:p-6 border-l-4",
                   campagne.statut === "planifiee"
                     ? "border-l-blue-500"
                     : campagne.statut === "active"
@@ -174,13 +174,13 @@ export default function CampagnesPage() {
                 )}
               >
                 {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-gray-900">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
                       {campagne.nom}
                     </h3>
                   </div>
-                  <span className={cn("badge", getStatutBadgeColor(campagne.statut))}>
+                  <span className={cn("badge whitespace-nowrap", getStatutBadgeColor(campagne.statut))}>
                     {CAMPAGNE_STATUT_LABELS[campagne.statut] || campagne.statut}
                   </span>
                 </div>
