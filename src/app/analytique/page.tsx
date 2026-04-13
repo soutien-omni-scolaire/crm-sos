@@ -4,16 +4,26 @@ import { useEffect, useState, useRef } from "react";
 import { cn, SOURCE_LABELS, RAISON_PERTE_LABELS, OFFRE_LABELS } from "@/lib/utils";
 import { Lead, AnalyticsData } from "@/types";
 
-interface AnalyticsResponse extends AnalyticsData {
-  raisonsDePerteData?: { raison: string; count: number }[];
-  conversionParSource?: { source: string; count: number; converted: number }[];
-  topOffres?: { offre: string; count: number }[];
+interface AnalyticsResponse {
+  totalLeads: number;
+  tauxConversionGlobal: number;
+  scoresMoyens: {
+    urgence: number;
+    budget: number;
+    reactivite: number;
+    potentiel: number;
+  };
+  leadsBySource: { source: string; count: number }[];
+  leadsByStatut: { statut: string; count: number }[];
   performanceParCentre?: {
     centre: string;
     code: string;
     leads: number;
     convertis: number;
   }[];
+  raisonsDePerteData?: { raison: string; count: number }[];
+  conversionParSource?: { source: string; count: number; converted: number }[];
+  topOffres?: { offre: string; count: number }[];
   delaiMoyenConversion?: number;
   leadsParMois?: { mois: string; count: number }[];
 }

@@ -20,13 +20,13 @@ export async function GET(request: NextRequest) {
       .filter((f) => f.leadsRecommandes.length > 0)
       .map((f) => {
         const totalRecommandations = f.leadsRecommandes.length;
-        const recommendationsConverties = f.leadsRecommandes.filter(
+        const recommandationsConverties = f.leadsRecommandes.filter(
           (lead) => lead.statut === "converti"
         ).length;
         const tauxConversion =
           totalRecommandations > 0
             ? Math.round(
-                (recommendationsConverties / totalRecommandations) * 10000
+                (recommandationsConverties / totalRecommandations) * 10000
               ) / 100
             : 0;
 

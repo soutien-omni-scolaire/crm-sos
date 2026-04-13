@@ -193,9 +193,10 @@ export default function LeadsPage() {
                       </td>
                       <td className="table-cell text-xs">
                         <span className="badge badge-gold text-xs">
-                          {OFFRE_LABELS[lead.offreDemandee] ||
-                            lead.offreDemandee ||
-                            "—"}
+                          {lead.offreDemandee
+                            ? OFFRE_LABELS[lead.offreDemandee] ||
+                              lead.offreDemandee
+                            : "—"}
                         </span>
                       </td>
                       <td className="table-cell">
