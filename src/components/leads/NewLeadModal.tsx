@@ -9,6 +9,13 @@ interface NewLeadModalProps {
   onSuccess: () => void;
 }
 
+const NIVEAU_SCOLAIRE_OPTIONS = [
+  "1P", "2P", "3P", "4P", "5P", "6P", "7P", "8P",
+  "9S", "10S", "11S",
+  "1re Gymnase", "2e Gymnase", "3e Gymnase",
+  "Apprentissage", "Université", "Autre",
+];
+
 export function NewLeadModal({ onClose, onSuccess }: NewLeadModalProps) {
   const [centres, setCentres] = useState<Centre[]>([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +29,7 @@ export function NewLeadModal({ onClose, onSuccess }: NewLeadModalProps) {
     niveauScolaire: "",
     matiereDemandee: "",
     offreDemandee: "",
-    nombreEnfants: "",
+    nombreEnfants: "1",
     commentaire: "",
   });
 
@@ -87,7 +94,7 @@ export function NewLeadModal({ onClose, onSuccess }: NewLeadModalProps) {
       <div className="modal">
         <div className="modal-header">
           <svg
-            className="h-5 w-5"
+            className="h-5 w-5 flex-shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
@@ -102,167 +109,190 @@ export function NewLeadModal({ onClose, onSuccess }: NewLeadModalProps) {
           <span>Nouveau lead</span>
           <button
             onClick={onClose}
-            className="ml-auto text-white hover:opacity-80 text-2xl leading-none"
+            className="ml-auto text-white/70 hover:text-white text-2xl leading-none transition-colors"
           >
-            ×
+            &times;
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Row 1 */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">Prénom *</label>
-              <input
-                type="text"
-                className="input w-full"
-                value={formData.prenomParent}
-                onChange={(e) =>
-                  setFormData({ ...formData, prenomParent: e.target.value })
-                }
-                placeholder="Jean"
-              />
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+          {/* Identité */}
+          <fieldset>
+            <legend className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              Identité du parent
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="label">Prénom *</label>
+                <input
+                  type="text"
+                  className="input w-full"
+                  value={formData.prenomParent}
+                  onChange={(e) =>
+                    setFormData({ ...formData, prenomParent: e.target.value })
+                  }
+                  placeholder="Jean"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="label">Nom</label>
+                <input
+                  type="text"
+                  className="input w-full"
+                  value={formData.nomParent}
+                  onChange={(e) =>
+                    setFormData({ ...formData, nomParent: e.target.value })
+                  }
+                  placeholder="Dupont"
+                />
+              </div>
             </div>
-            <div>
-              <label className="label">Nom</label>
-              <input
-                type="text"
-                className="input w-full"
-                value={formData.nomParent}
-                onChange={(e) =>
-                  setFormData({ ...formData, nomParent: e.target.value })
-                }
-                placeholder="Dupont"
-              />
-            </div>
-          </div>
+          </fieldset>
 
-          {/* Row 2 */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">Téléphone *</label>
-              <input
-                type="tel"
-                className="input w-full"
-                value={formData.telephone}
-                onChange={(e) =>
-                  setFormData({ ...formData, telephone: e.target.value })
-                }
-                placeholder="079 123 45 67"
-              />
+          {/* Contact */}
+          <fieldset>
+            <legend className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              Contact
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="label">Telephone *</label>
+                <input
+                  type="tel"
+                  className="input w-full"
+                  value={formData.telephone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, telephone: e.target.value })
+                  }
+                  placeholder="079 123 45 67"
+                />
+              </div>
+              <div>
+                <label className="label">Email</label>
+                <input
+                  type="email"
+                  className="input w-full"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  placeholder="jean@example.com"
+                />
+              </div>
             </div>
-            <div>
-              <label className="label">Email</label>
-              <input
-                type="email"
-                className="input w-full"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                placeholder="jean@example.com"
-              />
-            </div>
-          </div>
+          </fieldset>
 
-          {/* Row 3 */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">Source *</label>
-              <select
-                className="select w-full"
-                value={formData.source}
-                onChange={(e) =>
-                  setFormData({ ...formData, source: e.target.value })
-                }
-              >
-                {Object.entries(SOURCE_LABELS).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
+          {/* Provenance */}
+          <fieldset>
+            <legend className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              Provenance
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="label">Source *</label>
+                <select
+                  className="select w-full"
+                  value={formData.source}
+                  onChange={(e) =>
+                    setFormData({ ...formData, source: e.target.value })
+                  }
+                >
+                  {Object.entries(SOURCE_LABELS).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label">Centre *</label>
+                <select
+                  className="select w-full"
+                  value={formData.centreId}
+                  onChange={(e) =>
+                    setFormData({ ...formData, centreId: e.target.value })
+                  }
+                >
+                  <option value="">Choisir un centre...</option>
+                  {centres.map((centre) => (
+                    <option key={centre.id} value={centre.id}>
+                      {centre.nom}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="label">Centre *</label>
-              <select
-                className="select w-full"
-                value={formData.centreId}
-                onChange={(e) =>
-                  setFormData({ ...formData, centreId: e.target.value })
-                }
-              >
-                <option value="">Sélectionner...</option>
-                {centres.map((centre) => (
-                  <option key={centre.id} value={centre.id}>
-                    {centre.nom}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+          </fieldset>
 
-          {/* Row 4 */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">Niveau scolaire</label>
-              <input
-                type="text"
-                className="input w-full"
-                value={formData.niveauScolaire}
-                onChange={(e) =>
-                  setFormData({ ...formData, niveauScolaire: e.target.value })
-                }
-                placeholder="6e, 3e, 1re..."
-              />
+          {/* Besoin scolaire */}
+          <fieldset>
+            <legend className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+              Besoin scolaire
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="label">Niveau scolaire</label>
+                <select
+                  className="select w-full"
+                  value={formData.niveauScolaire}
+                  onChange={(e) =>
+                    setFormData({ ...formData, niveauScolaire: e.target.value })
+                  }
+                >
+                  <option value="">Choisir...</option>
+                  {NIVEAU_SCOLAIRE_OPTIONS.map((niveau) => (
+                    <option key={niveau} value={niveau}>
+                      {niveau}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label">Matiere demandee</label>
+                <input
+                  type="text"
+                  className="input w-full"
+                  value={formData.matiereDemandee}
+                  onChange={(e) =>
+                    setFormData({ ...formData, matiereDemandee: e.target.value })
+                  }
+                  placeholder="Maths, Francais..."
+                />
+              </div>
+              <div>
+                <label className="label">Offre demandee</label>
+                <select
+                  className="select w-full"
+                  value={formData.offreDemandee}
+                  onChange={(e) =>
+                    setFormData({ ...formData, offreDemandee: e.target.value })
+                  }
+                >
+                  <option value="">Non precise</option>
+                  {Object.entries(OFFRE_LABELS).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label">Nombre d&apos;enfants</label>
+                <input
+                  type="number"
+                  className="input w-full"
+                  value={formData.nombreEnfants}
+                  onChange={(e) =>
+                    setFormData({ ...formData, nombreEnfants: e.target.value })
+                  }
+                  placeholder="1"
+                  min="1"
+                  max="10"
+                />
+              </div>
             </div>
-            <div>
-              <label className="label">Matière demandée</label>
-              <input
-                type="text"
-                className="input w-full"
-                value={formData.matiereDemandee}
-                onChange={(e) =>
-                  setFormData({ ...formData, matiereDemandee: e.target.value })
-                }
-                placeholder="Mathématiques..."
-              />
-            </div>
-          </div>
-
-          {/* Row 5 */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">Offre demandée</label>
-              <select
-                className="select w-full"
-                value={formData.offreDemandee}
-                onChange={(e) =>
-                  setFormData({ ...formData, offreDemandee: e.target.value })
-                }
-              >
-                <option value="">Non précisé</option>
-                {Object.entries(OFFRE_LABELS).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="label">Nombre d'enfants</label>
-              <input
-                type="number"
-                className="input w-full"
-                value={formData.nombreEnfants}
-                onChange={(e) =>
-                  setFormData({ ...formData, nombreEnfants: e.target.value })
-                }
-                placeholder="1"
-                min="1"
-              />
-            </div>
-          </div>
+          </fieldset>
 
           {/* Commentaire */}
           <div>
@@ -273,26 +303,26 @@ export function NewLeadModal({ onClose, onSuccess }: NewLeadModalProps) {
               onChange={(e) =>
                 setFormData({ ...formData, commentaire: e.target.value })
               }
-              placeholder="Informations supplémentaires..."
+              placeholder="Informations supplementaires..."
               rows={3}
             />
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3 pt-6 border-t border-gray-100">
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn btn-gold flex-1"
-            >
-              {loading ? "Création..." : "Créer le lead"}
-            </button>
+          <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t border-gray-100">
             <button
               type="button"
               onClick={onClose}
               className="btn btn-secondary flex-1"
             >
               Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn btn-gold flex-1"
+            >
+              {loading ? "Creation..." : "Creer le lead"}
             </button>
           </div>
         </form>

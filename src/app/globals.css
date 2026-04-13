@@ -18,7 +18,7 @@
   }
   .btn-primary {
     @apply btn text-white focus:ring-blue-400;
-    background: #1B3568;
+    background: #0F1E3D;
   }
   .btn-primary:hover { background: #152952; }
   .btn-gold {
@@ -276,6 +276,14 @@
   /* === Touch-Friendly Elements === */
   button, a {
     @apply transition-all;
+  }
+
+  /* === Loading Spinner === */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin {
+    animation: spin 1s linear infinite;
   }
 
   /* === Scrollbar Styling === */

@@ -1,12 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+function getPeriodDates(period: string): { start: Date; end: Date } {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  switch (period) {
+    case "today":
+      return { start: today, end: tomorrow };
+    case "week": {
+      const dayOfWeek = today.getDay();
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+      const nextMonday = new Date(monday);
+      nextMonday.setDate(monday.getDate() + 7);
+      return { start: monday, end: nextMonday };
+    }
+    case "year": {
+      const startOfYear = new Date(now.getFullYear(), 0, 1);
+      const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
+      return { start: startOfYear, end: endOfYear };
+    }
+    case "month":
+    default: {
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      return { start: startOfMonth, end: endOfMonth };
+    }
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const period = searchParams.get("period") || "month";
+    const { start, end } = getPeriodDates(period);
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Leads en cours (not converti or perdu)
+    // Leads en cours (not converti or perdu) - global count
     const leadsEnCours = await prisma.lead.count({
       where: {
         statut: {
@@ -25,18 +60,18 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Convertis ce mois
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const convertisThisMonth = await prisma.lead.count({
+    // Convertis dans la periode
+    const convertisPeriode = await prisma.lead.count({
       where: {
         statut: "converti",
         updatedAt: {
-          gte: firstDayOfMonth,
+          gte: start,
+          lt: end,
         },
       },
     });
 
-    // Familles actives
+    // Familles actives - global count
     const famillesActives = await prisma.famille.count({
       where: {
         statut: "actif",
@@ -60,7 +95,7 @@ export async function GET(request: NextRequest) {
     const tauxConversion =
       totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
 
-    // Revenue estimé
+    // Revenue estime
     const activeInscriptions = await prisma.inscription.count({
       where: {
         statut: "en_cours",
@@ -89,7 +124,7 @@ export async function GET(request: NextRequest) {
       count: item._count,
     }));
 
-    // Taches aujourd'hui (due today or overdue, a_faire)
+    // Taches du jour (due today or overdue, a_faire)
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -129,16 +164,33 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    // Raisons de perte
+    const raisonsPerteData = await prisma.lead.groupBy({
+      by: ["raisonPerte"],
+      where: {
+        statut: "perdu",
+        raisonPerte: { not: null },
+      },
+      _count: true,
+    });
+
+    const raisonsDePerteData = raisonsPerteData.map((item) => ({
+      raison: item.raisonPerte || "non_precise",
+      count: item._count,
+    }));
+
     const dashboard = {
       leadsEnCours,
       relancesEnRetard,
-      convertisCeMois: convertisThisMonth,
+      convertisCeMois: convertisPeriode,
       famillesActives,
       famillesInactives,
       tauxConversion: Math.round(tauxConversion * 100) / 100,
       revenueEstime,
       entonnoir,
       leadsBySource: leadsBySourceData,
+      leadsByStatut: [],
+      raisonsDePerteData,
       tachesAujourdhui,
       derniersLeads,
     };

@@ -159,13 +159,13 @@ export default function LeadsPage() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="table-header">Parent</th>
-                  <th className="table-header">Téléphone</th>
+                  <th className="table-header hidden sm:table-cell">Telephone</th>
                   <th className="table-header">Source</th>
-                  <th className="table-header">Centre</th>
-                  <th className="table-header">Offre</th>
-                  <th className="table-header">Score</th>
+                  <th className="table-header hidden lg:table-cell">Centre</th>
+                  <th className="table-header hidden md:table-cell">Offre</th>
+                  <th className="table-header hidden lg:table-cell">Score</th>
                   <th className="table-header">Statut</th>
-                  <th className="table-header">Prochaine relance</th>
+                  <th className="table-header hidden md:table-cell">Relance</th>
                 </tr>
               </thead>
               <tbody>
@@ -180,26 +180,31 @@ export default function LeadsPage() {
                       onClick={() => (window.location.href = `/leads/${lead.id}`)}
                     >
                       <td className="table-cell font-medium">
-                        {lead.prenomParent} {lead.nomParent || ""}
+                        <div>
+                          {lead.prenomParent} {lead.nomParent || ""}
+                          <p className="text-xs text-gray-400 sm:hidden mt-0.5">
+                            {lead.telephone}
+                          </p>
+                        </div>
                       </td>
-                      <td className="table-cell text-xs">{lead.telephone}</td>
+                      <td className="table-cell text-xs hidden sm:table-cell">{lead.telephone}</td>
                       <td className="table-cell">
                         <span className="badge badge-navy text-xs">
                           {SOURCE_LABELS[lead.source] || lead.source}
                         </span>
                       </td>
-                      <td className="table-cell text-xs">
-                        {lead.centre?.nom || "—"}
+                      <td className="table-cell text-xs hidden lg:table-cell">
+                        {lead.centre?.nom || "\u2014"}
                       </td>
-                      <td className="table-cell text-xs">
+                      <td className="table-cell text-xs hidden md:table-cell">
                         <span className="badge badge-gold text-xs">
                           {lead.offreDemandee
                             ? OFFRE_LABELS[lead.offreDemandee] ||
                               lead.offreDemandee
-                            : "—"}
+                            : "\u2014"}
                         </span>
                       </td>
-                      <td className="table-cell">
+                      <td className="table-cell hidden lg:table-cell">
                         <div className="flex gap-0.5">
                           {[...Array(5)].map((_, i) => (
                             <div
@@ -231,7 +236,7 @@ export default function LeadsPage() {
                       </td>
                       <td
                         className={cn(
-                          "table-cell text-xs",
+                          "table-cell text-xs hidden md:table-cell",
                           lead.dateProchaineRelance &&
                             isOverdue(lead.dateProchaineRelance)
                             ? "font-medium"

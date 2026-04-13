@@ -417,109 +417,131 @@ export default function TachesPage() {
 
       {/* Modal Nouvelle Tâche */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg max-w-md w-full mx-4">
-            <div
-              className="modal-header"
-              style={{ background: "#152952" }}
-            >
-              <h2>Nouvelle tâche</h2>
+        <div className="modal-overlay visible">
+          <div className="modal">
+            <div className="modal-header">
+              <svg className="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              <span>Nouvelle tache</span>
+              <button
+                onClick={() => setShowModal(false)}
+                className="ml-auto text-white/70 hover:text-white text-2xl leading-none transition-colors"
+              >
+                &times;
+              </button>
             </div>
 
-            <form onSubmit={handleCreateTache} className="p-6 space-y-4">
-              <div>
-                <label className="label">Titre *</label>
-                <input
-                  type="text"
-                  className="input"
-                  value={formData.titre}
-                  onChange={(e) =>
-                    setFormData({ ...formData, titre: e.target.value })
-                  }
-                  required
-                />
-              </div>
+            <form onSubmit={handleCreateTache} className="p-4 sm:p-6 space-y-4">
+              {/* Titre + Description */}
+              <fieldset>
+                <legend className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  Description de la tache
+                </legend>
+                <div className="space-y-3">
+                  <div>
+                    <label className="label">Titre *</label>
+                    <input
+                      type="text"
+                      className="input w-full"
+                      value={formData.titre}
+                      onChange={(e) =>
+                        setFormData({ ...formData, titre: e.target.value })
+                      }
+                      placeholder="Relancer Mme Dupont par WhatsApp"
+                      autoFocus
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="label">Description</label>
+                    <textarea
+                      className="input w-full"
+                      rows={2}
+                      value={formData.description}
+                      onChange={(e) =>
+                        setFormData({ ...formData, description: e.target.value })
+                      }
+                      placeholder="Details supplementaires..."
+                    />
+                  </div>
+                </div>
+              </fieldset>
 
-              <div>
-                <label className="label">Description</label>
-                <textarea
-                  className="input"
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                />
-              </div>
+              {/* Type + Priorité + Échéance */}
+              <fieldset>
+                <legend className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                  Parametres
+                </legend>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="label">Type *</label>
+                    <select
+                      className="select w-full"
+                      value={formData.type}
+                      onChange={(e) =>
+                        setFormData({ ...formData, type: e.target.value })
+                      }
+                    >
+                      <option value="">Choisir un type</option>
+                      {Object.entries(TYPE_TACHE_LABELS).map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="label">Priorite</label>
+                    <select
+                      className="select w-full"
+                      value={formData.priorite}
+                      onChange={(e) =>
+                        setFormData({ ...formData, priorite: e.target.value })
+                      }
+                    >
+                      {Object.entries(PRIORITE_LABELS).map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="label">Echeance *</label>
+                    <input
+                      type="date"
+                      className="input w-full"
+                      value={formData.dateEcheance}
+                      onChange={(e) =>
+                        setFormData({ ...formData, dateEcheance: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="label">Assigne a *</label>
+                    <select
+                      className="select w-full"
+                      value={formData.assigneeId}
+                      onChange={(e) =>
+                        setFormData({ ...formData, assigneeId: e.target.value })
+                      }
+                      required
+                    >
+                      <option value="">Choisir...</option>
+                      {utilisateurs.map((util) => (
+                        <option key={util.id} value={util.id}>
+                          {util.prenom} {util.nom}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
 
-              <div>
-                <label className="label">Type</label>
-                <select
-                  className="select"
-                  value={formData.type}
-                  onChange={(e) =>
-                    setFormData({ ...formData, type: e.target.value })
-                  }
-                >
-                  <option value="">Choisir un type</option>
-                  {Object.entries(TYPE_TACHE_LABELS).map(([key, label]) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="label">Échéance *</label>
-                <input
-                  type="date"
-                  className="input"
-                  value={formData.dateEcheance}
-                  onChange={(e) =>
-                    setFormData({ ...formData, dateEcheance: e.target.value })
-                  }
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="label">Priorité</label>
-                <select
-                  className="select"
-                  value={formData.priorite}
-                  onChange={(e) =>
-                    setFormData({ ...formData, priorite: e.target.value })
-                  }
-                >
-                  {Object.entries(PRIORITE_LABELS).map(([key, label]) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="label">Assigné à *</label>
-                <select
-                  className="select"
-                  value={formData.assigneeId}
-                  onChange={(e) =>
-                    setFormData({ ...formData, assigneeId: e.target.value })
-                  }
-                  required
-                >
-                  <option value="">Choisir une personne</option>
-                  {utilisateurs.map((util) => (
-                    <option key={util.id} value={util.id}>
-                      {util.prenom} {util.nom}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex gap-3 pt-4">
+              {/* Buttons */}
+              <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
@@ -533,7 +555,7 @@ export default function TachesPage() {
                   className="btn btn-gold flex-1"
                   disabled={submitting}
                 >
-                  {submitting ? "Création..." : "Créer"}
+                  {submitting ? "Creation..." : "Creer la tache"}
                 </button>
               </div>
             </form>
