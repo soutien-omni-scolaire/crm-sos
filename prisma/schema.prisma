@@ -1,0 +1,249 @@
+// ============================================================
+// CRM SOS — Schéma de base de données v3
+// Soutien-Omni-Scolaire — Machine commerciale
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// CENTRE (4 centres: TM, LM, TY, LY)
+// ============================================================
+model Centre {
+  id        String   @id @default(cuid())
+  nom       String   // Ex: "Lausanne Malley"
+  code      String   @unique // TM, LM, TY, LY
+  adresse   String?
+  telephone String?
+  actif     Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  utilisateurs Utilisateur[]
+  leads        Lead[]
+  familles     Famille[]
+  eleves       Eleve[]
+  inscriptions Inscription[]
+
+  @@map("centres")
+}
+
+// ============================================================
+// UTILISATEUR (interne)
+// ============================================================
+model Utilisateur {
+  id        String  @id @default(cuid())
+  prenom    String
+  nom       String
+  email     String  @unique
+  password  String
+  role      String  @default("assistant") // admin | responsable | assistant
+  centreId  String?
+  actif     Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  centre              Centre?       @relation(fields: [centreId], references: [id])
+  leadsCreated        Lead[]        @relation("LeadCreePar")
+  interactionsCreated Interaction[] @relation("InteractionCreePar")
+  tachesAssignees     Tache[]       @relation("TacheAssignee")
+  tachesCreated       Tache[]       @relation("TacheCreePar")
+
+  @@map("utilisateurs")
+}
+
+// ============================================================
+// LEAD — avec scoring commercial
+// ============================================================
+model Lead {
+  id               String    @id @default(cuid())
+  prenomParent     String
+  nomParent        String?
+  telephone        String
+  email            String?
+  source           String    // whatsapp | telephone | instagram | site_web | formulaire | bouche_a_oreille | recommandation | precommande | autre
+  centreId         String
+  statut           String    @default("nouveau") // nouveau | contacte | qualifie | en_attente | converti | perdu
+  // Infos scolaires
+  niveauScolaire   String?
+  matiereDemandee  String?
+  offreDemandee    String?   // CI | ES | CSP | SH | SI | non_precise
+  nombreEnfants    Int       @default(1)
+  // Scoring commercial (1-5 chacun)
+  scoreUrgence     Int       @default(0) // 0 = non évalué
+  scoreBudget      Int       @default(0)
+  scoreReactivite  Int       @default(0)
+  scorePotentiel   Int       @default(0) // multi-offres / multi-enfants
+  // Suivi
+  commentaire      String?
+  raisonPerte      String?   // trop_cher | mauvais_timing | trouve_ailleurs | ne_repond_plus | pas_de_creneau | autre
+  dateDernierContact   DateTime?
+  dateProchaineRelance DateTime?
+  // Campagne / Recommandation
+  campagneId       String?
+  recommandeParId  String?   // FK vers Famille qui a recommandé
+  // Système
+  creeParId        String
+  familleId        String?   @unique
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  centre        Centre       @relation(fields: [centreId], references: [id])
+  creePar       Utilisateur  @relation("LeadCreePar", fields: [creeParId], references: [id])
+  famille       Famille?     @relation(fields: [familleId], references: [id])
+  campagne      Campagne?    @relation(fields: [campagneId], references: [id])
+  recommandePar Famille?     @relation("RecommandationLead", fields: [recommandeParId], references: [id])
+  interactions  Interaction[] @relation("InteractionLead")
+  taches        Tache[]      @relation("TacheLead")
+
+  @@map("leads")
+}
+
+// ============================================================
+// FAMILLE (parent / responsable légal)
+// ============================================================
+model Famille {
+  id                String   @id @default(cuid())
+  prenom            String
+  nom               String
+  telephone         String
+  email             String?
+  adresse           String?
+  centrePrincipalId String
+  statut            String   @default("actif") // actif | inactif
+  sourceOrigine     String
+  scoreFidelite     Int      @default(0) // 0-5, calculé selon ancienneté + nb inscriptions
+  commentaire       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  centrePrincipal    Centre        @relation(fields: [centrePrincipalId], references: [id])
+  eleves             Eleve[]
+  lead               Lead?
+  leadsRecommandes   Lead[]        @relation("RecommandationLead")
+  interactions       Interaction[] @relation("InteractionFamille")
+  taches             Tache[]       @relation("TacheFamille")
+
+  @@map("familles")
+}
+
+// ============================================================
+// ÉLÈVE
+// ============================================================
+model Eleve {
+  id             String   @id @default(cuid())
+  prenom         String
+  nom            String
+  familleId      String
+  niveauScolaire String?
+  ecole          String?
+  centreId       String
+  statut         String   @default("actif") // actif | inactif | sorti
+  commentaire    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  famille      Famille       @relation(fields: [familleId], references: [id], onDelete: Cascade)
+  centre       Centre        @relation(fields: [centreId], references: [id])
+  inscriptions Inscription[]
+
+  @@map("eleves")
+}
+
+// ============================================================
+// INSCRIPTION (avec codes offres SOS réels)
+// ============================================================
+model Inscription {
+  id          String    @id @default(cuid())
+  eleveId     String
+  typeOffre   String    // CI | ES | CSP | SH | SI
+  formule     String?   // Ex: "Pack 10h", "Abo mensuel", "Stage Pâques Maths"
+  matieres    String?
+  centreId    String
+  statut      String    @default("en_cours") // en_cours | termine | annule
+  dateDebut   DateTime
+  dateFin     DateTime?
+  commentaire String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  eleve  Eleve  @relation(fields: [eleveId], references: [id], onDelete: Cascade)
+  centre Centre @relation(fields: [centreId], references: [id])
+
+  @@map("inscriptions")
+}
+
+// ============================================================
+// INTERACTION (historique des échanges)
+// ============================================================
+model Interaction {
+  id              String   @id @default(cuid())
+  type            String   // appel | whatsapp | email | rdv | note_interne
+  date            DateTime
+  resume          String
+  prochaineAction String?
+  leadId          String?
+  familleId       String?
+  creeParId       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  lead    Lead?       @relation("InteractionLead", fields: [leadId], references: [id], onDelete: Cascade)
+  famille Famille?    @relation("InteractionFamille", fields: [familleId], references: [id], onDelete: Cascade)
+  creePar Utilisateur @relation("InteractionCreePar", fields: [creeParId], references: [id])
+
+  @@map("interactions")
+}
+
+// ============================================================
+// TÂCHE / RELANCE
+// ============================================================
+model Tache {
+  id           String   @id @default(cuid())
+  titre        String
+  description  String?
+  type         String   @default("autre") // relance_prospect | relance_reinscription | relance_reactivation | suivi | autre
+  dateEcheance DateTime
+  statut       String   @default("a_faire") // a_faire | fait | annule
+  priorite     String   @default("normale") // normale | urgente
+  assigneeId   String
+  leadId       String?
+  familleId    String?
+  creeParId    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  assignee Utilisateur @relation("TacheAssignee", fields: [assigneeId], references: [id])
+  creePar  Utilisateur @relation("TacheCreePar", fields: [creeParId], references: [id])
+  lead     Lead?       @relation("TacheLead", fields: [leadId], references: [id], onDelete: Cascade)
+  famille  Famille?    @relation("TacheFamille", fields: [familleId], references: [id], onDelete: Cascade)
+
+  @@map("taches")
+}
+
+// ============================================================
+// CAMPAGNE (saisons / périodes commerciales)
+// ============================================================
+model Campagne {
+  id              String    @id @default(cuid())
+  nom             String    // Ex: "Rentrée 2026", "Préparation ECR 8P"
+  description     String?
+  type            String    // rentree | ecr | stage_vacances | promotion | autre
+  dateDebut       DateTime
+  dateFin         DateTime
+  objectifLeads   Int       @default(0)
+  budget          Float?    // CHF
+  statut          String    @default("planifiee") // planifiee | active | terminee
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  leads Lead[]
+
+  @@map("campagnes")
+}
