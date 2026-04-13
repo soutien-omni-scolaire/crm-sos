@@ -66,22 +66,22 @@ export function Header() {
   ];
 
   return (
-    <header className="flex h-auto lg:h-16 flex-col lg:flex-row items-start lg:items-center justify-between border-b bg-white px-4 sm:px-7 py-3 lg:py-0 gap-3 lg:gap-4">
-      <div className="flex items-center gap-4 pt-2 lg:pt-0 pl-10 lg:pl-0">
-        <h1 className="text-base sm:text-lg font-semibold" style={{ color: "#0F1E3D" }}>
+    <header className="flex h-auto lg:h-16 flex-col lg:flex-row items-start lg:items-center justify-between border-b bg-white px-4 sm:px-7 py-4 lg:py-0 gap-4 lg:gap-4">
+      <div className="flex items-center gap-4 pt-1 lg:pt-0 pl-12 lg:pl-0">
+        <h1 className="text-lg sm:text-xl font-bold" style={{ color: "#0F1E3D" }}>
           {getPageTitle(pathname)}
         </h1>
       </div>
-      <div className="flex items-center gap-2 lg:gap-4 flex-wrap w-full lg:w-auto">
+      <div className="flex items-center gap-2 lg:gap-4 flex-wrap w-full lg:w-auto pl-12 lg:pl-0">
         {/* Centre Filter */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full lg:w-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 w-full lg:w-auto">
           <span
             className="text-xs font-semibold uppercase tracking-wider whitespace-nowrap"
             style={{ color: "#6B7280" }}
           >
             Filtrer
           </span>
-          <div className="flex gap-1.5 flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             {centresShortNames.map((centre) => (
               <button
                 key={centre.id}

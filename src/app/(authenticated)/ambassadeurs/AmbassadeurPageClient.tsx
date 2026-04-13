@@ -14,7 +14,7 @@ interface AmbassadeurRecord {
   nombreConvertis: number;
 }
 
-export default function AmbassadeurPage() {
+export default function AmbassadeurPageClient() {
   const [ambassadeurs, setAmbassadeurs] = useState<AmbassadeurRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const centreIdRef = useRef<string | null>(null);
@@ -30,7 +30,7 @@ export default function AmbassadeurPage() {
 
       // Sort by number of recommendations (descending)
       const sorted = [...data].sort(
-        (a, b) => b.nombreRecommandations - a.nombreRecommandations
+        (a: AmbassadeurRecord, b: AmbassadeurRecord) => b.nombreRecommandations - a.nombreRecommandations
       );
 
       setAmbassadeurs(sorted);
